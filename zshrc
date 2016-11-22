@@ -23,7 +23,7 @@ bindkey -v
 
 prompt_host()
 {
-   echo -n "%F{white}$(whoami)@$(hostname)%f"
+   echo -n "$(whoami)@$(hostname)"
 }
 
 prompt_dir()
