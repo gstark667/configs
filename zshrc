@@ -4,6 +4,7 @@ zstyle ':completion:*' completer _complete _ignored
 zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-]=** r:|=**' 'l:|=* r:|=*'
 zstyle :compinstall filename '/home/octalus/.zshrc'
 alias ls='ls --color=auto'
+alias grep='grep --color=auto'
 
 setopt prompt_subst
 #setopt promptsubst
