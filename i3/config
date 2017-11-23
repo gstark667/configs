@@ -191,5 +191,5 @@ client.background       $color0
 
 exec xrandr --output DisplayPort-0 --mode 1920x1080 --rate 144
 exec feh --bg-fill ~/Pictures/Wallpapers/space_city.jpg
-exec compton -b
+exec compton --glx-no-rebind-pixmap --glx-use-copysubbuffermesa --glx-no-stencil --unredir-if-possible &
 exec redshift &
