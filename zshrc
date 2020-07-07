@@ -1,69 +1,38 @@
-# The following lines were added by compinstall
-
-zstyle ':completion:*' completer _complete _ignored
-zstyle ':completion:*' matcher-list 'm:{[:lower:]}={[:upper:]}' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'r:|[._-]=** r:|=**' 'l:|=* r:|=*'
-zstyle :compinstall filename '/home/octalus/.zshrc'
-alias ls='ls --color=auto'
-alias grep='grep --color=auto'
-
-setopt prompt_subst
-#setopt promptsubst
-#setopt promptpercent
-
-autoload -Uz compinit
-compinit
-# End of lines added by compinstall
 # Lines configured by zsh-newuser-install
 HISTFILE=~/.histfile
 HISTSIZE=1000
 SAVEHIST=1000
-setopt appendhistory
-unsetopt autocd beep extendedglob nomatch notify
+setopt notify
+unsetopt autocd beep
 bindkey -v
 # End of lines configured by zsh-newuser-install
+# The following lines were added by compinstall
+zstyle :compinstall filename '/home/octalus/.zshrc'
 
-prompt_host()
-{
-   echo -n "$(whoami)@$(hostname)"
-}
+autoload -Uz compinit
+compinit
+# End of lines added by compinstall
 
-prompt_dir()
-{
-   echo -n "%F{blue}%~%f"
-}
+powerline-daemon -q
+. /usr/lib/python3.8/site-packages/powerline/bindings/zsh/powerline.zsh
 
-parse_git_dirty() {
-  local STATUS=''
-  local FLAGS
-  FLAGS=('--porcelain')
-  if [[ "$(command git config --get oh-my-zsh.hide-dirty)" != "1" ]]; then
-    if [[ $POST_1_7_2_GIT -gt 0 ]]; then
-      FLAGS+='--ignore-submodules=dirty'
-    fi
-    if [[ "$DISABLE_UNTRACKED_FILES_DIRTY" == "true" ]]; then
-      FLAGS+='--untracked-files=no'
-    fi
-    STATUS=$(command git status ${FLAGS} 2> /dev/null | tail -n1)
-  fi
-  if [[ -n $STATUS ]]; then
-    echo "$ZSH_THEME_GIT_PROMPT_DIRTY"
-  else
-    echo "$ZSH_THEME_GIT_PROMPT_CLEAN"
-  fi
-}
+START_SSH=0
+if [ -f ~/.ssh-agent ]; then
+	source ~/.ssh-agent > /dev/null
+	if ! kill -0 $SSH_AGENT_PID || [ ! -w $SSH_AUTH_SOCK ]; then
+		START_SSH=1
+	fi
+else
+	START_SSH=1
+fi
 
-git_prompt_info() {
-  if [[ "$(command git config --get oh-my-zsh.hide-status 2>/dev/null)" != "1" ]]; then
-    ref=$(command git symbolic-ref HEAD 2> /dev/null) || \
-    ref=$(command git rev-parse --short HEAD 2> /dev/null) || return 0
-    echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$(parse_git_dirty)$ZSH_THEME_GIT_PROMPT_SUFFIX"
-  fi
-}
+if [ ! -d ~/.ssh ]; then
+	START_SSH=0
+fi
 
-prompt_git()
-{
-   echo -n "%F{green}$(git_prompt_info)%f"
-}
-
-PS1='$(prompt_host) $(prompt_dir) $(prompt_git)
-> '
+if [ $START_SSH -eq 1 ]; then
+	echo "starting ssh agent";
+	ssh-agent > ~/.ssh-agent
+	source ~/.ssh-agent > /dev/null
+	ssh-add $(ls -d ~/.ssh/* | grep -v pub | grep -v known_hosts | grep -v config) > /dev/null 2> /dev/null
+fi
