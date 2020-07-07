@@ -31,7 +31,6 @@ if [ ! -d ~/.ssh ]; then
 fi
 
 if [ $START_SSH -eq 1 ]; then
-	echo "starting ssh agent";
 	ssh-agent > ~/.ssh-agent
 	source ~/.ssh-agent > /dev/null
 	ssh-add $(ls -d ~/.ssh/* | grep -v pub | grep -v known_hosts | grep -v config) > /dev/null 2> /dev/null
