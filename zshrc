@@ -16,22 +16,17 @@ compinit
 powerline-daemon -q
 . /usr/lib/python3.8/site-packages/powerline/bindings/zsh/powerline.zsh
 
-START_SSH=0
-if [ -f ~/.ssh-agent ]; then
-	source ~/.ssh-agent > /dev/null
-	if ! kill -0 $SSH_AGENT_PID || [ ! -w $SSH_AUTH_SOCK ]; then
-		START_SSH=1
-	fi
-else
-	START_SSH=1
+if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
+        source /etc/profile.d/vte.sh
 fi
 
-if [ ! -d ~/.ssh ]; then
-	START_SSH=0
-fi
-
-if [ $START_SSH -eq 1 ]; then
-	ssh-agent > ~/.ssh-agent
-	source ~/.ssh-agent > /dev/null
-	ssh-add $(ls -d ~/.ssh/* | grep -v pub | grep -v known_hosts | grep -v config) > /dev/null 2> /dev/null
-fi
+NOTES_DIR="$HOME/Notes"
+EDITOR=vim
+function n() {
+        echo $#
+        if [ $# -eq 1 ]; then
+                $EDITOR $NOTES_DIR/$1.md
+        else
+                $EDITOR $NOTES_DIR/general.md
+        fi
+}
