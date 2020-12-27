@@ -14,7 +14,7 @@ compinit
 # End of lines added by compinstall
 
 powerline-daemon -q
-. /usr/lib/python3.8/site-packages/powerline/bindings/zsh/powerline.zsh
+. /usr/lib/python3.9/site-packages/powerline/bindings/zsh/powerline.zsh
 
 if [ $TILIX_ID ] || [ $VTE_VERSION ]; then
         source /etc/profile.d/vte.sh
@@ -23,10 +23,10 @@ fi
 NOTES_DIR="$HOME/Notes"
 EDITOR=vim
 function n() {
-        echo $#
-        if [ $# -eq 1 ]; then
-                $EDITOR $NOTES_DIR/$1.md
-        else
-                $EDITOR $NOTES_DIR/general.md
-        fi
+	echo $#
+	if [ $# -eq 1 ]; then
+		$EDITOR $NOTES_DIR/$1.md
+	else
+		$EDITOR $NOTES_DIR/general.md
+	fi
 }
